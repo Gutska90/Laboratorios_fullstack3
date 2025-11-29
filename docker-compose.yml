@@ -79,8 +79,66 @@ services:
       - lab-network
     restart: unless-stopped
 
+  # Base de datos MySQL para Biblioteca
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-biblioteca-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=biblioteca_db
+      - MYSQL_USER=biblioteca_user
+      - MYSQL_PASSWORD=biblioteca123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database-biblioteca-setup.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - lab-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Microservicio de Libros (Generado desde Arquetipo) - Usa MySQL
+  microservicio-libros:
+    build:
+      context: ./microservicio-libros
+      dockerfile: Dockerfile
+    container_name: ms-libros
+    ports:
+      - "8084:8084"
+    environment:
+      - SERVER_PORT=8084
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/biblioteca_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root123
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - lab-network
+    restart: unless-stopped
+
+  # Frontend Angular - Biblioteca
+  biblioteca-frontend:
+    build:
+      context: ./biblioteca-frontend
+      dockerfile: Dockerfile
+    container_name: biblioteca-frontend
+    ports:
+      - "4201:80"
+    depends_on:
+      - microservicio-libros
+    networks:
+      - lab-network
+    restart: unless-stopped
+
 volumes:
   oracle-data:
+  mysql-data:
 
 networks:
   lab-network:

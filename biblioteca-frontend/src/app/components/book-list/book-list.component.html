@@ -1,0 +1,58 @@
+<div class="container-fluid book-list-container">
+  <header class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <h1 class="mb-2 mb-md-0">Gestión de Libros</h1>
+        <a routerLink="/libros/nuevo" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Nuevo Libro
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="row">
+    <div class="col-12 text-center">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Cargando libros...</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="row mb-3">
+    <div class="col-12">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error" class="row">
+    <div class="col-12">
+      <div *ngIf="books.length === 0" class="empty-state">
+        <p>No hay libros registrados.</p>
+        <a routerLink="/libros/nuevo" class="btn btn-primary">Agregar Primer Libro</a>
+      </div>
+
+      <div *ngIf="books.length > 0" class="row">
+        <div *ngFor="let book of books" class="col-12 col-md-6 col-lg-4 mb-3">
+          <div class="card book-card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ book.titulo }}</h5>
+              <p class="card-text">
+                <strong>Autor:</strong> {{ book.autor }}<br>
+                <strong>Año:</strong> {{ book.anioPublicacion }}<br>
+                <strong>Género:</strong> {{ book.genero }}
+              </p>
+              <div class="actions">
+                <a [routerLink]="['/libros/editar', book.id]" class="btn btn-sm btn-primary">Editar</a>
+                <button (click)="deleteBook(book.id!)" class="btn btn-sm btn-danger">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,89 @@
+<div class="container-fluid book-form-container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="mb-0">{{ isEditMode ? 'Editar Libro' : 'Nuevo Libro' }}</h2>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+            <div *ngIf="error" class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="titulo" 
+                formControlName="titulo"
+                [class.is-invalid]="bookForm.get('titulo')?.invalid && bookForm.get('titulo')?.touched">
+              <div *ngIf="bookForm.get('titulo')?.invalid && bookForm.get('titulo')?.touched" class="invalid-feedback">
+                <div *ngIf="bookForm.get('titulo')?.errors?.['required']">El título es obligatorio</div>
+                <div *ngIf="bookForm.get('titulo')?.errors?.['minlength']">El título debe tener al menos 1 carácter</div>
+                <div *ngIf="bookForm.get('titulo')?.errors?.['maxlength']">El título no puede tener más de 200 caracteres</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="autor" class="form-label">Autor *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="autor" 
+                formControlName="autor"
+                [class.is-invalid]="bookForm.get('autor')?.invalid && bookForm.get('autor')?.touched">
+              <div *ngIf="bookForm.get('autor')?.invalid && bookForm.get('autor')?.touched" class="invalid-feedback">
+                <div *ngIf="bookForm.get('autor')?.errors?.['required']">El autor es obligatorio</div>
+                <div *ngIf="bookForm.get('autor')?.errors?.['minlength']">El autor debe tener al menos 1 carácter</div>
+                <div *ngIf="bookForm.get('autor')?.errors?.['maxlength']">El autor no puede tener más de 100 caracteres</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="anioPublicacion" class="form-label">Año de Publicación *</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="anioPublicacion" 
+                formControlName="anioPublicacion"
+                [class.is-invalid]="bookForm.get('anioPublicacion')?.invalid && bookForm.get('anioPublicacion')?.touched">
+              <div *ngIf="bookForm.get('anioPublicacion')?.invalid && bookForm.get('anioPublicacion')?.touched" class="invalid-feedback">
+                <div *ngIf="bookForm.get('anioPublicacion')?.errors?.['required']">El año es obligatorio</div>
+                <div *ngIf="bookForm.get('anioPublicacion')?.errors?.['min']">El año debe ser mayor a 1000</div>
+                <div *ngIf="bookForm.get('anioPublicacion')?.errors?.['max']">El año debe ser menor o igual a 2025</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="genero" class="form-label">Género *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="genero" 
+                formControlName="genero"
+                [class.is-invalid]="bookForm.get('genero')?.invalid && bookForm.get('genero')?.touched">
+              <div *ngIf="bookForm.get('genero')?.invalid && bookForm.get('genero')?.touched" class="invalid-feedback">
+                <div *ngIf="bookForm.get('genero')?.errors?.['required']">El género es obligatorio</div>
+                <div *ngIf="bookForm.get('genero')?.errors?.['minlength']">El género debe tener al menos 1 carácter</div>
+                <div *ngIf="bookForm.get('genero')?.errors?.['maxlength']">El género no puede tener más de 50 caracteres</div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="loading || bookForm.invalid">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isEditMode ? 'Actualizar' : 'Crear' }}
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
