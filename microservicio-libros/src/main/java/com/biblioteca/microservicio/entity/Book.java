@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
  * Entidad Book que representa un libro en la biblioteca
  */
 @Entity
-@Table(name = "BOOKS")
+@Table(name = "books")
 public class Book {
     
     @Id

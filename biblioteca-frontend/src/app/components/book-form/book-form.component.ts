@@ -86,14 +86,15 @@ export class BookFormComponent implements OnInit {
       } else {
         // POST: Crear nuevo libro
         this.bookService.createBook(bookData).subscribe({
-          next: () => {
+          next: (createdBook) => {
             this.loading = false;
+            console.log('Libro creado exitosamente:', createdBook);
             this.router.navigate(['/libros']);
           },
           error: (err) => {
-            this.error = 'Error al crear el libro.';
             this.loading = false;
-            console.error('Error:', err);
+            console.error('Error al crear el libro:', err);
+            this.error = err.error?.mensaje || err.error?.message || 'Error al crear el libro. Verifica los datos e intenta nuevamente.';
           }
         });
       }

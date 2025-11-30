@@ -40,11 +40,13 @@ export class BookListComponent implements OnInit {
 
   deleteBook(id: number): void {
     if (confirm('¿Estás seguro de que deseas eliminar este libro?')) {
+      this.loading = true;
       this.bookService.deleteBook(id).subscribe({
         next: () => {
-          this.loadBooks();
+          this.loadBooks(); // Recargar lista después de eliminar
         },
         error: (err) => {
+          this.loading = false;
           this.error = 'Error al eliminar el libro.';
           console.error('Error:', err);
         }

@@ -7,10 +7,8 @@ import { Book } from '../models/book.model';
   providedIn: 'root'
 })
 export class BookService {
-  // URL del API - se adapta automáticamente según el entorno
-  private apiUrl = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8084/api/libros'
-    : '/api/libros';
+  // URL del API - usa proxy de Nginx cuando está en Docker, directo en desarrollo
+  private apiUrl = '/api/libros';
 
   constructor(private http: HttpClient) { }
 
