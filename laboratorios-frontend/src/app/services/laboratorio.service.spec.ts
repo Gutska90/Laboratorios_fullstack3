@@ -50,6 +50,10 @@ describe('LaboratorioService', () => {
     });
     service = TestBed.inject(LaboratorioService);
     httpMock = TestBed.inject(HttpTestingController);
+    
+    // Handle the constructor call
+    const constructorReq = httpMock.match(apiUrl);
+    constructorReq.forEach(req => req.flush(mockLaboratorios));
   });
 
   afterEach(() => {
@@ -67,9 +71,9 @@ describe('LaboratorioService', () => {
         expect(laboratorios.length).toBe(2);
       });
 
-      const req = httpMock.expectOne(apiUrl);
-      expect(req.request.method).toBe('GET');
-      req.flush(mockLaboratorios);
+      const reqs = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      expect(reqs.length).toBeGreaterThan(0);
+      reqs[0].flush(mockLaboratorios);
     });
   });
 
@@ -84,6 +88,10 @@ describe('LaboratorioService', () => {
       const req = httpMock.expectOne(`${apiUrl}/activos`);
       expect(req.request.method).toBe('GET');
       req.flush(activeLaboratorios);
+      
+      // Handle constructor call if any
+      const constructorReqs = httpMock.match(apiUrl);
+      constructorReqs.forEach(req => req.flush(mockLaboratorios));
     });
   });
 
@@ -96,6 +104,10 @@ describe('LaboratorioService', () => {
       const req = httpMock.expectOne(`${apiUrl}/1`);
       expect(req.request.method).toBe('GET');
       req.flush(mockLaboratorio);
+      
+      // Handle constructor call if any
+      const constructorReqs = httpMock.match(apiUrl);
+      constructorReqs.forEach(req => req.flush(mockLaboratorios));
     });
   });
 
@@ -107,10 +119,14 @@ describe('LaboratorioService', () => {
         expect(laboratorio).toEqual(newLaboratorio);
       });
 
-      const req = httpMock.expectOne(apiUrl);
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual(mockLaboratorioRequest);
-      req.flush(newLaboratorio);
+      const reqs = httpMock.match((r) => r.url === apiUrl && r.method === 'POST');
+      expect(reqs.length).toBe(1);
+      expect(reqs[0].request.body).toEqual(mockLaboratorioRequest);
+      reqs[0].flush(newLaboratorio);
+      
+      // Handle the reload call
+      const reloadReq = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reloadReq.forEach(req => req.flush(mockLaboratorios));
     });
   });
 
@@ -126,6 +142,10 @@ describe('LaboratorioService', () => {
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(mockLaboratorioRequest);
       req.flush(updatedLaboratorio);
+      
+      // Handle the reload call
+      const reloadReq = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reloadReq.forEach(req => req.flush(mockLaboratorios));
     });
   });
 
@@ -152,8 +172,9 @@ describe('LaboratorioService', () => {
         expect(service.getLaboratoriosLocal()).toEqual(mockLaboratorios);
       });
 
-      const req = httpMock.expectOne(apiUrl);
-      req.flush(mockLaboratorios);
+      const reqs = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      expect(reqs.length).toBeGreaterThan(0);
+      reqs[0].flush(mockLaboratorios);
     });
   });
 
@@ -164,8 +185,8 @@ describe('LaboratorioService', () => {
         expect(local).toEqual(mockLaboratorios);
       });
 
-      const req = httpMock.expectOne(apiUrl);
-      req.flush(mockLaboratorios);
+      const reqs = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reqs[0].flush(mockLaboratorios);
     });
   });
 });

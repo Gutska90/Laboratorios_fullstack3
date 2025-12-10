@@ -133,10 +133,14 @@ describe('ResultadoService', () => {
         expect(resultado).toEqual(newResultado);
       });
 
-      const req = httpMock.expectOne(apiUrl);
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual(mockResultadoRequest);
-      req.flush(newResultado);
+      const reqs = httpMock.match((r) => r.url === apiUrl && r.method === 'POST');
+      expect(reqs.length).toBe(1);
+      expect(reqs[0].request.body).toEqual(mockResultadoRequest);
+      reqs[0].flush(newResultado);
+      
+      // Handle the reload call
+      const reloadReq = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reloadReq.forEach(req => req.flush(mockResultados));
     });
   });
 
@@ -152,6 +156,10 @@ describe('ResultadoService', () => {
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(mockResultadoRequest);
       req.flush(updatedResultado);
+      
+      // Handle the reload call
+      const reloadReq = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reloadReq.forEach(req => req.flush(mockResultados));
     });
   });
 

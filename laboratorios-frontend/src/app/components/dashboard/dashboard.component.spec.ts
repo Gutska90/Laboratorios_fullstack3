@@ -18,7 +18,7 @@ describe('DashboardComponent', () => {
   let usuarioService: jasmine.SpyObj<UsuarioService>;
   let laboratorioService: jasmine.SpyObj<LaboratorioService>;
   let resultadoService: jasmine.SpyObj<ResultadoService>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
 
   const mockUsuario: Usuario = {
     id: 1,
@@ -49,8 +49,7 @@ describe('DashboardComponent', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: UsuarioService, useValue: usuarioServiceSpy },
         { provide: LaboratorioService, useValue: laboratorioServiceSpy },
-        { provide: ResultadoService, useValue: resultadoServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: ResultadoService, useValue: resultadoServiceSpy }
       ]
     }).compileComponents();
 
@@ -60,7 +59,8 @@ describe('DashboardComponent', () => {
     usuarioService = TestBed.inject(UsuarioService) as jasmine.SpyObj<UsuarioService>;
     laboratorioService = TestBed.inject(LaboratorioService) as jasmine.SpyObj<LaboratorioService>;
     resultadoService = TestBed.inject(ResultadoService) as jasmine.SpyObj<ResultadoService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
 
     authService.getCurrentUser.and.returnValue(mockUsuario);
     usuarioService.getUsuariosLocal.and.returnValue(mockUsuarios);

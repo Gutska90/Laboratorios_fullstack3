@@ -11,7 +11,7 @@ describe('RegistroComponent', () => {
   let component: RegistroComponent;
   let fixture: ComponentFixture<RegistroComponent>;
   let usuarioService: jasmine.SpyObj<UsuarioService>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
 
   const mockUsuario: Usuario = {
     id: 1,
@@ -23,20 +23,19 @@ describe('RegistroComponent', () => {
 
   beforeEach(async () => {
     const usuarioServiceSpy = jasmine.createSpyObj('UsuarioService', ['createUsuario']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [RegistroComponent, ReactiveFormsModule, RouterTestingModule],
       providers: [
-        { provide: UsuarioService, useValue: usuarioServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: UsuarioService, useValue: usuarioServiceSpy }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistroComponent);
     component = fixture.componentInstance;
     usuarioService = TestBed.inject(UsuarioService) as jasmine.SpyObj<UsuarioService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 
