@@ -54,6 +54,10 @@ describe('ResultadoService', () => {
     });
     service = TestBed.inject(ResultadoService);
     httpMock = TestBed.inject(HttpTestingController);
+    
+    // Handle the constructor call
+    const constructorReq = httpMock.match(apiUrl);
+    constructorReq.forEach(req => req.flush(mockResultados));
   });
 
   afterEach(() => {
@@ -154,12 +158,16 @@ describe('ResultadoService', () => {
   describe('deleteResultado', () => {
     it('should delete a resultado by id', () => {
       service.deleteResultado(1).subscribe(response => {
-        expect(response).toBeUndefined();
+        expect(response).toBeNull();
       });
 
-      const req = httpMock.expectOne(`${apiUrl}/1`);
-      expect(req.request.method).toBe('DELETE');
-      req.flush(null);
+      const reqs = httpMock.match((r) => r.url === `${apiUrl}/1` && r.method === 'DELETE');
+      expect(reqs.length).toBe(1);
+      reqs[0].flush(null);
+      
+      // Handle the reload call
+      const reloadReq = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reloadReq.forEach(req => req.flush(mockResultados));
     });
   });
 

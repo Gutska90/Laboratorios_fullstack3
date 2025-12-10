@@ -132,12 +132,16 @@ describe('LaboratorioService', () => {
   describe('deleteLaboratorio', () => {
     it('should delete a laboratorio by id', () => {
       service.deleteLaboratorio(1).subscribe(response => {
-        expect(response).toBeUndefined();
+        expect(response).toBeNull();
       });
 
-      const req = httpMock.expectOne(`${apiUrl}/1`);
-      expect(req.request.method).toBe('DELETE');
-      req.flush(null);
+      const reqs = httpMock.match((r) => r.url === `${apiUrl}/1` && r.method === 'DELETE');
+      expect(reqs.length).toBe(1);
+      reqs[0].flush(null);
+      
+      // Handle the reload call
+      const reloadReq = httpMock.match((r) => r.url === apiUrl && r.method === 'GET');
+      reloadReq.forEach(req => req.flush(mockLaboratorios));
     });
   });
 
