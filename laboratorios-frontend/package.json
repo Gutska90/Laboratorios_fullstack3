@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --code-coverage",
+    "test:watch": "ng test --code-coverage --watch",
+    "test:ci": "ng test --code-coverage --watch=false --browsers=ChromeHeadless",
+    "coverage": "ng test --code-coverage --watch=false --browsers=ChromeHeadless",
+    "sonar": "sonar-scanner"
   },
   "private": true,
   "dependencies": {
