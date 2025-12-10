@@ -122,6 +122,22 @@ services:
       - lab-network
     restart: unless-stopped
 
+  # Frontend Angular - Laboratorios
+  laboratorios-frontend:
+    build:
+      context: ./laboratorios-frontend
+      dockerfile: Dockerfile
+    container_name: laboratorios-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - microservicio-usuarios
+      - microservicio-laboratorios
+      - microservicio-resultados
+    networks:
+      - lab-network
+    restart: unless-stopped
+
   # Frontend Angular - Biblioteca
   biblioteca-frontend:
     build:
