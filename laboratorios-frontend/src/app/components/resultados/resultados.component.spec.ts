@@ -145,6 +145,9 @@ describe('ResultadosComponent', () => {
     expect(resultadoService.createResultado).toHaveBeenCalled();
     expect(component.loading).toBe(false);
     expect(component.error).toBeTruthy();
+    
+    tick(5100); // Wait for error timeout
+    expect(component.error).toBe('');
   }));
 
   it('should handle error when updating resultado fails', fakeAsync(() => {
@@ -166,6 +169,9 @@ describe('ResultadosComponent', () => {
     expect(resultadoService.updateResultado).toHaveBeenCalled();
     expect(component.loading).toBe(false);
     expect(component.error).toBeTruthy();
+    
+    tick(5100); // Wait for error timeout
+    expect(component.error).toBe('');
   }));
 
   it('should handle error when deleting resultado fails', fakeAsync(() => {
@@ -178,6 +184,9 @@ describe('ResultadosComponent', () => {
 
     expect(component.loading).toBe(false);
     expect(component.error).toBeTruthy();
+    
+    tick(5100); // Wait for error timeout
+    expect(component.error).toBe('');
   }));
 
   it('should not delete if user cancels confirmation', () => {
@@ -239,9 +248,13 @@ describe('ResultadosComponent', () => {
   it('should validate tipoAnalisis minLength', () => {
     fixture.detectChanges();
     const tipoAnalisisControl = component.resultadoForm.get('tipoAnalisis');
+    // Set value with less than 3 characters
     tipoAnalisisControl?.setValue('AB');
     tipoAnalisisControl?.markAsTouched();
-    expect(tipoAnalisisControl?.hasError('minLength')).toBe(true);
+    tipoAnalisisControl?.updateValueAndValidity();
+    // Verify the control has minlength error (Angular uses lowercase 'minlength')
+    expect(tipoAnalisisControl?.invalid).toBe(true);
+    expect(tipoAnalisisControl?.hasError('minlength')).toBe(true);
   });
 
   it('should not set pacienteId if user is not PACIENTE', () => {
@@ -271,6 +284,7 @@ describe('ResultadosComponent', () => {
 
   it('should handle successful create with timeout', fakeAsync(() => {
     resultadoService.createResultado.and.returnValue(of(mockResultados[0]));
+    component.showForm = true; // Initialize showForm
 
     component.resultadoForm.patchValue({
       pacienteId: 1,
@@ -291,6 +305,7 @@ describe('ResultadosComponent', () => {
   it('should handle successful update with timeout', fakeAsync(() => {
     resultadoService.updateResultado.and.returnValue(of(mockResultados[0]));
     component.editingId = 1;
+    component.showForm = true; // Initialize showForm
 
     component.resultadoForm.patchValue({
       pacienteId: 1,

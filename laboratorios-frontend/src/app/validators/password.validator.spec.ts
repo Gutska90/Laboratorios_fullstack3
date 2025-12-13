@@ -76,7 +76,7 @@ describe('passwordValidator', () => {
   });
 
   it('should accept password with exactly 50 characters', () => {
-    const password = 'A'.repeat(48) + '1!';
+    const password = 'A'.repeat(47) + 'a1!'; // 47 A's + 'a1!' = 50 chars, includes lowercase
     control.setValue(password);
     expect(control.errors).toBeNull();
   });

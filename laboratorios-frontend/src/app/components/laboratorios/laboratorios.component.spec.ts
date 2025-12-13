@@ -135,6 +135,9 @@ describe('LaboratoriosComponent', () => {
     expect(laboratorioService.createLaboratorio).toHaveBeenCalled();
     expect(component.loading).toBe(false);
     expect(component.error).toBeTruthy();
+    
+    tick(5100); // Wait for error timeout
+    expect(component.error).toBe('');
   }));
 
   it('should handle error when updating laboratorio fails', fakeAsync(() => {
@@ -155,6 +158,9 @@ describe('LaboratoriosComponent', () => {
     expect(laboratorioService.updateLaboratorio).toHaveBeenCalled();
     expect(component.loading).toBe(false);
     expect(component.error).toBeTruthy();
+    
+    tick(5100); // Wait for error timeout
+    expect(component.error).toBe('');
   }));
 
   it('should handle error when deleting laboratorio fails', () => {
@@ -216,14 +222,22 @@ describe('LaboratoriosComponent', () => {
 
   it('should validate nombre minLength', () => {
     const nombreControl = component.laboratorioForm.get('nombre');
-    nombreControl?.setValue('AB');
-    expect(nombreControl?.hasError('minLength')).toBe(true);
+    nombreControl?.setValue('AB'); // Less than 3 characters
+    nombreControl?.markAsTouched();
+    nombreControl?.updateValueAndValidity();
+    // Check if control is invalid and has minlength error
+    expect(nombreControl?.invalid).toBe(true);
+    expect(nombreControl?.hasError('minlength')).toBe(true);
   });
 
   it('should validate direccion minLength', () => {
     const direccionControl = component.laboratorioForm.get('direccion');
-    direccionControl?.setValue('1234');
-    expect(direccionControl?.hasError('minLength')).toBe(true);
+    direccionControl?.setValue('123'); // Less than 5 characters
+    direccionControl?.markAsTouched();
+    direccionControl?.updateValueAndValidity();
+    // Check if control is invalid and has minlength error
+    expect(direccionControl?.invalid).toBe(true);
+    expect(direccionControl?.hasError('minlength')).toBe(true);
   });
 
   it('should validate telefono pattern', () => {
@@ -247,6 +261,7 @@ describe('LaboratoriosComponent', () => {
 
   it('should handle successful create with timeout', fakeAsync(() => {
     laboratorioService.createLaboratorio.and.returnValue(of(mockLaboratorios[0]));
+    component.showForm = true; // Initialize showForm
 
     component.laboratorioForm.patchValue({
       nombre: 'New Lab',
@@ -266,6 +281,7 @@ describe('LaboratoriosComponent', () => {
   it('should handle successful update with timeout', fakeAsync(() => {
     laboratorioService.updateLaboratorio.and.returnValue(of(mockLaboratorios[0]));
     component.editingId = 1;
+    component.showForm = true; // Initialize showForm
 
     component.laboratorioForm.patchValue({
       nombre: 'Updated Lab',

@@ -86,6 +86,7 @@ Esta actividad implementa pruebas unitarias completas para el Frontend de Angula
   - Patrones y arquetipos
   - Porcentaje de cobertura
   - Ejecución de pruebas unitarias
+  - **Guion disponible**: `GUION-VIDEO-PRESENTACION.md`
 
 ## 📁 Archivos Creados/Modificados
 
@@ -198,7 +199,10 @@ El archivo `sonar-project.properties` está configurado para:
 - [x] Documentación completa
 - [x] Código subido a Git
 - [x] Archivos listos para ZIP/RAR
-- [ ] Video de presentación grabado (Pendiente)
+- [x] Guion de video creado (`GUION-VIDEO-PRESENTACION.md`)
+- [x] Checklist de entregables creado (`CHECKLIST-ENTREGABLES.md`)
+- [x] Instrucciones de entrega creadas (`INSTRUCCIONES-ENTREGA.md`)
+- [ ] Video de presentación grabado (Pendiente - el estudiante debe hacerlo)
 
 ## 📝 Notas Adicionales
 
